@@ -16,7 +16,7 @@ from autocorrect import Speller
 
 app = dash.Dash(__name__)
 
-df = pd.read_csv("C:\\Users\\xlerv_000\\OneDrive\\Code\\PycharmProjects\\sentimentAnalysis\\sent_scores.csv")
+df = pd.read_csv("sent_scores.csv")
 
 analyzer = SentimentIntensityAnalyzer()
 
@@ -59,12 +59,12 @@ for i in range(len(df)):
 counts = collections.Counter(noun_phrases)
 clean_tweets = pd.DataFrame(counts.most_common(30),
                              columns=['words', 'count'])
-fig3 = px.bar(clean_tweets, x='words', y='count')
-
 
 fig1 = px.scatter(df, x="compound", y="subjectivity", hover_data=["tweet", "tweet_id"])
 fig2 = px.scatter(df, x="polarity", y="subjectivity", hover_data=["tweet", "tweet_id"])
+fig3 = px.bar(clean_tweets, x='words', y='count')
 
+#------------------------------ Preliminary abuse stuu - to be deleted
 bad_tweets = []
 tweet_id = []
 for i in range(len(df)):
@@ -73,8 +73,8 @@ for i in range(len(df)):
         tweet_id.append(df['tweet_id'][i])
 
 my_df = pd.DataFrame(dict(col1=bad_tweets, col2=tweet_id))
-
 print(my_df)
+#-----------------
 
 app.layout = html.Div(children=[
     # All elements from the top of the page
@@ -119,6 +119,7 @@ app.layout = html.Div(children=[
             figure=fig3
         ),
     ]),
+
 """
 
     html.Div(
