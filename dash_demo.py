@@ -22,8 +22,8 @@ analyzer = SentimentIntensityAnalyzer()
 def sentiment_analyzer_scores(text):
     return analyzer.polarity_scores(text)
 
+# create a list a column in dataframe to store all nouns for each tweet
 noun_phrases = []
-
 df['nouns'] = df['nouns'].astype(object)
 
 for i in range(len(df)):
@@ -31,39 +31,44 @@ for i in range(len(df)):
     tweet = df['tweet'][i]
     urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', tweet)
 
+    # removing links and excess whitespaces
     for url in urls:
         tweet = tweet.replace(url, '')
     tweet = re.sub(r"(?:\@|https?\://)\S+", "", tweet).replace('RT ','')
     tweet = re.sub(r'[^\w]', ' ', tweet)
 
-    #too sensitive
     df.at[i,'tweet'] = tweet
     #print(tweet)
 
+    # create score from vader and textblob
     vader_opinion = sentiment_analyzer_scores(tweet)
-
     opinion = TextBlob(tweet)
 
+    # add scores to dataframe from textblob
     df.at[i, 'polarity'] = opinion.sentiment.polarity
     df.at[i, 'subjectivity'] = opinion.sentiment.subjectivity
+
+    # add scores to dataframe from vader
     #print(vader_opinion['compound'])
     df.at[i, 'compound'] = vader_opinion['compound']
     df.at[i, 'nouns'] = opinion.noun_phrases
 
+    # get noun words from textblob
     for noun in opinion.noun_phrases:
         noun_phrases.append(noun.lower())
     #print(opinion.noun_phrases)
 
-#word frequencies
+# generate word frequencies from noun words
 counts = collections.Counter(noun_phrases)
 clean_tweets = pd.DataFrame(counts.most_common(30),
                              columns=['words', 'count'])
 
+# create plotly figures
 fig1 = px.scatter(df, x="compound", y="subjectivity", hover_data=["tweet", "tweet_id"])
 fig2 = px.scatter(df, x="polarity", y="subjectivity", hover_data=["tweet", "tweet_id"])
 fig3 = px.bar(clean_tweets, x='words', y='count')
 
-#------------------------------ Preliminary abuse stuu - to be deleted
+#--------Preliminary abuse stuff - to be deleted
 bad_tweets = []
 tweet_id = []
 for i in range(len(df)):
@@ -75,6 +80,7 @@ my_df = pd.DataFrame(dict(col1=bad_tweets, col2=tweet_id))
 print(my_df)
 #-----------------
 
+# begin plotting plotly figures to Dash front end dashboard
 app.layout = html.Div(children=[
     # All elements from the top of the page
     html.Div([
@@ -119,7 +125,7 @@ app.layout = html.Div(children=[
         ),
     ]),
 
-"""
+""" # extra figure
 
     html.Div(
         html.H1(children='Possible abusive instances'),
@@ -134,7 +140,6 @@ app.layout = html.Div(children=[
 
     )
 """
-
 ])
 
 if __name__ == '__main__':
