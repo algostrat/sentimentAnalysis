@@ -7,15 +7,20 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from textblob import TextBlob
 import re
 import collections
-#import dash_table
-#import plotly.graph_objects as go
+import dash_table
+import plotly.graph_objects as go
+import nltk
+from nltk.collocations import *
+import wordcloud
+from autocorrect import Speller
 
-#import wordcloud
-#from autocorrect import Speller
 
 app = dash.Dash(__name__)
 
 df = pd.read_csv("sent_scores.csv")
+
+text_entries = a_dataframe.to_numpy()
+np.savetxt("text_file.txt", text_entries, fmt = "%d")
 
 analyzer = SentimentIntensityAnalyzer()
 
@@ -54,16 +59,16 @@ for i in range(len(df)):
         noun_phrases.append(noun.lower())
     #print(opinion.noun_phrases)
 
-#word frequencies
+#Word frequencies (Trend Discovery)
 counts = collections.Counter(noun_phrases)
 clean_tweets = pd.DataFrame(counts.most_common(30),
                              columns=['words', 'count'])
+fig3 = px.bar(clean_tweets, x='words', y='count')
+
 
 fig1 = px.scatter(df, x="compound", y="subjectivity", hover_data=["tweet", "tweet_id"])
 fig2 = px.scatter(df, x="polarity", y="subjectivity", hover_data=["tweet", "tweet_id"])
-fig3 = px.bar(clean_tweets, x='words', y='count')
 
-#------------------------------ Preliminary abuse stuu - to be deleted
 bad_tweets = []
 tweet_id = []
 for i in range(len(df)):
@@ -72,8 +77,26 @@ for i in range(len(df)):
         tweet_id.append(df['tweet_id'][i])
 
 my_df = pd.DataFrame(dict(col1=bad_tweets, col2=tweet_id))
+
 print(my_df)
-#-----------------
+
+# Phrase frequencies (Trend Discovery)
+
+# Using NLTK library to finding common 2 and 3 word phrases.
+bigram_measures = nltk.collocations.BigramAssocMeasures()
+trigram_measures = nltk.collocations.TrigramAssocMeasures()
+
+# Reading in data saved for Phrase frequencies on line 22 and 23. 
+finder = BigramCollocationFinder.from_words(
+    nltk.corpus.genesis.words('text_file.txt'))
+
+# Keeping only bigrams that more than 8 times, depending on the size of datasets we can adjust the number.
+finder.apply_freq_filter(8)
+
+# Lastly, we return, print, the 10 n-grams with the highest PMI (Pointwise Mutual Information)
+finder.nbest(bigram_measures.pmi, 10)
+
+
 
 app.layout = html.Div(children=[
     # All elements from the top of the page
@@ -119,8 +142,20 @@ app.layout = html.Div(children=[
         ),
     ]),
 
-"""
+    # New Div for all elements in the new 'row' of the page
+    html.Div([
+        html.H1(children='Phrase Frequencies'),
 
+        html.Div(children='''
+            Most common phrases
+        '''),
+
+        dcc.Graph(
+            id='graph4',
+            figure=fig4
+        ),
+    ]),
+"""
     html.Div(
         html.H1(children='Possible abusive instances'),
         html.Div(children='''
@@ -131,7 +166,6 @@ app.layout = html.Div(children=[
             columns=[{"name": i, "id": i} for i in my_df.columns],
             data = my_df.to_dict('records'),
         )
-
     )
 """
 
