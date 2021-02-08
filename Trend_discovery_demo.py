@@ -14,8 +14,12 @@ import collections
 #import dash_table
 #import plotly.graph_objects as go
 #import wordcloud
-#from autocorrect import Speller
+from autocorrect import Speller
+spell = Speller(lang='en')
 
+from nltk.corpus import stopwords
+stop_words = set(stopwords.words('english'))
+#nltk.download()
 
 df = pd.read_csv("sent_scores.csv")
 
@@ -45,6 +49,7 @@ for i in range(len(df)):
     tweet = re.sub(' +', ' ', tweet)
 
     tweet = tweet.lower()
+    tweet = spell(tweet)
 
     df.at[i,'tweet'] = tweet
 
@@ -63,6 +68,11 @@ for i in range(len(df)):
     for noun in opinion.noun_phrases:
         noun_phrases.append(noun.lower())
 
+    #removing stop words
+    word_tokens = nltk.word_tokenize(tweet, False)
+    filtered_sentence = [w for w in word_tokens if not w in stop_words]
+    print(filtered_sentence)
+
     # optimized trend finder----------------------------------------
     # Using NLTK library to finding common 2 and 3 word phrases.
     bigram_measures = nltk.collocations.BigramAssocMeasures()
@@ -73,10 +83,10 @@ for i in range(len(df)):
     #     nltk.corpus.genesis.words('text_file.txt'))
 
     token = nltk.wordpunct_tokenize(tweet)
-    print(tweet)
-    print("token :"+str(token))
+    print("tweet: "+ tweet)
+    #print("token :"+str(token))
 
-    finder = BigramCollocationFinder.from_words(token)
+    finder = TrigramCollocationFinder.from_words(token)
     print(finder.nbest(bigram_measures.pmi, 4),"\n")
 
     # Keeping only bigrams that more than 8 times, depending on the size of datasets we can adjust the number.
@@ -85,6 +95,9 @@ for i in range(len(df)):
     # Lastly, we return, print, the 10 n-grams with the highest PMI (Pointwise Mutual Information)
     finder.nbest(bigram_measures.pmi, 10)
 
+
+
     #because this is running as a script only test on small set
     if i > 3:
         break
+
