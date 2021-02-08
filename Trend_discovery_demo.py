@@ -1,5 +1,7 @@
 import nltk
 from nltk.collocations import *
+from nltk.corpus import stopwords
+
 import numpy as np
 
 import plotly.express as px
@@ -40,11 +42,11 @@ for i in range(len(df)):
         tweet = tweet.replace(url, '')
     tweet = re.sub(r"(?:\@|https?\://)\S+", "", tweet).replace('RT ','')
     tweet = re.sub(r'[^\w]', ' ', tweet)
-    tweet_1 = re.sub(' +', ' ', tweet)
+    tweet = re.sub(' +', ' ', tweet)
 
-    #too sensitive
+    tweet = tweet.lower()
+
     df.at[i,'tweet'] = tweet
-    #print(tweet)
 
     vader_opinion = sentiment_analyzer_scores(tweet)
     opinion = TextBlob(tweet)
@@ -54,6 +56,8 @@ for i in range(len(df)):
     # print(vader_opinion['compound'])
     df.at[i, 'compound'] = vader_opinion['compound']
     df.at[i, 'nouns'] = opinion.noun_phrases
+
+    nouns = opinion.noun_phrases #not accurate
 
     # preliminary trend finder
     for noun in opinion.noun_phrases:
@@ -68,11 +72,12 @@ for i in range(len(df)):
     # finder = BigramCollocationFinder.from_words(
     #     nltk.corpus.genesis.words('text_file.txt'))
 
-    print(tweet+"\n", tweet_1)
-    finder = BigramCollocationFinder.from_words(
-        tweet)
-    finder.apply_freq_filter(2)
-    print(finder.nbest(bigram_measures.pmi, 10),"\n")
+    token = nltk.wordpunct_tokenize(tweet)
+    print(tweet)
+    print("token :"+str(token))
+
+    finder = BigramCollocationFinder.from_words(token)
+    print(finder.nbest(bigram_measures.pmi, 4),"\n")
 
     # Keeping only bigrams that more than 8 times, depending on the size of datasets we can adjust the number.
     finder.apply_freq_filter(8)
@@ -80,5 +85,6 @@ for i in range(len(df)):
     # Lastly, we return, print, the 10 n-grams with the highest PMI (Pointwise Mutual Information)
     finder.nbest(bigram_measures.pmi, 10)
 
+    #because this is running as a script only test on small set
     if i > 3:
         break
