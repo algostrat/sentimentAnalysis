@@ -19,7 +19,7 @@ spell = Speller(lang='en')
 
 from nltk.corpus import stopwords
 stop_words = set(stopwords.words('english'))
-#nltk.download()
+
 
 df = pd.read_csv("sent_scores.csv")
 
@@ -69,9 +69,9 @@ for i in range(len(df)):
         noun_phrases.append(noun.lower())
 
     #removing stop words
-    word_tokens = nltk.word_tokenize(tweet, False)
+    word_tokens = nltk.word_tokenize(tweet)
     filtered_sentence = [w for w in word_tokens if not w in stop_words]
-    print(filtered_sentence)
+    print("filtered: "+str(filtered_sentence))
 
     # optimized trend finder----------------------------------------
     # Using NLTK library to finding common 2 and 3 word phrases.
