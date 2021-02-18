@@ -58,6 +58,8 @@ for i in range(len(df)):
         noun_phrases.append(noun.lower())
     #print(opinion.noun_phrases)
 
+
+
 # generate word frequencies from noun words
 counts = collections.Counter(noun_phrases)
 clean_tweets = pd.DataFrame(counts.most_common(30),
