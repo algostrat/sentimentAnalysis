@@ -30,7 +30,7 @@ noun_phrases = []
 
 df['nouns'] = df['nouns'].astype(object)
 
-print(spell("helllo mye name is"))
+print(spell("helllo mye name is youre"))
 
 for i in range(len(df)):
     #sentiment_analyzer_scores(df['tweet'][i])
