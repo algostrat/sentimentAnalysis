@@ -58,6 +58,7 @@ for i in range(len(df)):
         noun_phrases.append(noun.lower())
     #print(opinion.noun_phrases)
 
+print(df)
 
 
 # generate word frequencies from noun words
@@ -65,10 +66,13 @@ counts = collections.Counter(noun_phrases)
 clean_tweets = pd.DataFrame(counts.most_common(30),
                              columns=['words', 'count'])
 
+print(clean_tweets)
+
 # create plotly figures
 fig1 = px.scatter(df, x="compound", y="subjectivity", hover_data=["tweet", "tweet_id"])
 fig2 = px.scatter(df, x="polarity", y="subjectivity", hover_data=["tweet", "tweet_id"])
 fig3 = px.bar(clean_tweets, x='words', y='count')
+
 
 #--------Preliminary abuse stuff - to be deleted
 bad_tweets = []
@@ -79,7 +83,9 @@ for i in range(len(df)):
         tweet_id.append(df['tweet_id'][i])
 
 my_df = pd.DataFrame(dict(col1=bad_tweets, col2=tweet_id))
+my_df = my_df[0:10]
 print(my_df)
+
 #-----------------
 
 # begin plotting plotly figures to Dash front end dashboard
@@ -142,11 +148,12 @@ app.layout = html.Div(children=[
 
     )
 """
+
 ])
 
 
-# @app.callback(
-#
+#@app.callback(
+
 # )
 
 if __name__ == '__main__':
