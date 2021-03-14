@@ -58,7 +58,7 @@ for i in range(len(df)):
         noun_phrases.append(noun.lower())
     #print(opinion.noun_phrases)
 
-print(df)
+#print(df)
 
 
 # generate word frequencies from noun words
@@ -66,7 +66,7 @@ counts = collections.Counter(noun_phrases)
 clean_tweets = pd.DataFrame(counts.most_common(30),
                              columns=['words', 'count'])
 
-print(clean_tweets)
+#print(clean_tweets)
 
 # create plotly figures
 fig1 = px.scatter(df, x="compound", y="subjectivity", hover_data=["tweet", "tweet_id"])
@@ -81,10 +81,13 @@ for i in range(len(df)):
     if df['compound'][i] < -0.3 or df['polarity'][i] < -0.6:
         bad_tweets.append(df['tweet'][i][0:30])
         tweet_id.append(df['tweet_id'][i])
+# --- ignore above
+
 
 my_df = pd.DataFrame(dict(col1=bad_tweets, col2=tweet_id))
-my_df = my_df[0:10]
-print(my_df)
+my_df = clean_tweets[0:10]
+
+print(my_df['words'])
 
 #-----------------
 
