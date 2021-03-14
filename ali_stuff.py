@@ -1,5 +1,5 @@
 from ensurepip import bootstrap
-import components as components
+#import components as components
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
