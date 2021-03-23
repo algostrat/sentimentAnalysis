@@ -89,7 +89,6 @@ fig6 = px.bar(clean_tweetspie, x='wordsnew', y='countnew')
 # my_df1 = my_df1[0:10]
 # print(my_df1)
 
-
 # Change fig marker color
 
 fig1.update_traces(marker=dict(size=9,
