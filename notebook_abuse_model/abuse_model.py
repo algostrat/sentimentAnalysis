@@ -2,13 +2,23 @@ import pickle
 from notebook_abuse_model.preproc import preproc
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
+import os
+wd = os.getcwd()
 
-#load the logistic regression model
-with open('log_reg_model.pkl', 'rb') as f:
-    log_reg = pickle.load(f)
+# load the logistic regression model
+# the below will cause as error is this file's curwd is notebook_abuse_model
+try:
+    with open('notebook_abuse_model\log_reg_model.pkl', 'rb') as f:
+        log_reg = pickle.load(f)
+    # load feature dataframe
+    df2 = pd.read_pickle('notebook_abuse_model/data/tfidf_feature_matrix.pkl')
+except FileNotFoundError:
+    with open('log_reg_model.pkl', 'rb') as f:
+        log_reg = pickle.load(f)
+    # load feature dataframe
+    df2 = pd.read_pickle('data/tfidf_feature_matrix.pkl')
 
-#load feature dataframe
-df2 = pd.read_pickle('data/tfidf_feature_matrix.pkl')
+
 
 
 def predict(s, threshold=0.5):
@@ -34,8 +44,8 @@ def predict(s, threshold=0.5):
     # yhat = log_reg.predict(df_test)
     a = log_reg.predict_proba(df_test)
     if a[0][0] > threshold:
-        return False
+        return 'no'
     else:
-        return True
+        return 'yes'
 
-#print(predict("what the heck"))
+#print(type(predict("I love you")))

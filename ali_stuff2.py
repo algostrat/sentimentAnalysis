@@ -10,9 +10,12 @@ import re
 import collections
 from dash.dependencies import Output, Input
 import dash_bootstrap_components as dbc
-from plotly.subplots import make_subplots
+#from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-import dash_table
+#import dash_table
+
+from notebook_abuse_model.preproc import preproc
+import notebook_abuse_model.abuse_model as abuse_model
 
 # import wordcloud
 # from autocorrect import Speller
@@ -83,11 +86,14 @@ for index, row in clean_tweetspie.iterrows():
     if len(words) > 2:
         clean_tweetspie.drop(index, inplace=True)
 
+# print(clean_tweets)
+
 for index, row in clean_tweets.iterrows():
     words = row['words'].split()
     if len(words) > 2:
         clean_tweets.drop(index, inplace=True)
 
+# print(clean_tweets)
 
 fig1 = px.scatter(df, x="compound", y="subjectivity", hover_data=["tweet", "tweet_id"])
 fig2 = px.scatter(df, x="polarity", y="subjectivity", hover_data=["tweet", "tweet_id"])
@@ -100,7 +106,6 @@ fig7 = px.scatter()
 # my_df1 = pd.DataFrame(dict(col1=clean_tweets))
 # my_df1 = my_df1[0:10]
 # print(my_df1)
-
 
 # Change fig marker color
 
@@ -174,20 +179,20 @@ tab_selected_style = {
     'fontWeight': 'bold'
 }
 
-# ------------------------------ Preliminary abuse stuff
-bad_tweets = []
-tweet_id = []
-for i in range(len(df)):
-    if df['compound'][i] < -0.3 or df['polarity'][i] < -0.6:
-        bad_tweets.append(df['tweet'][i][0:30])
-        tweet_id.append(df['tweet_id'][i])
+# ------------------------------ Abuse part stuff
+#bad_tweets = []
+#tweet_id = []
+#for i in range(len(df)):
+#    if df['compound'][i] < -0.3 or df['polarity'][i] < -0.6:
+#        bad_tweets.append(df['tweet'][i][0:30])
+#        tweet_id.append(df['tweet_id'][i])
 
-# -----------
+#my_df = pd.DataFrame(dict(col1=bad_tweets, col2=tweet_id))
+#my_df = clean_tweets[0:10]
+#print(my_df['words'][0])
 
-my_df = pd.DataFrame(dict(col1=bad_tweets, col2=tweet_id))
-my_df = clean_tweets[0:10]
-print(my_df['words'][0])
-# print(my_df)
+df['abuse_predictiction'] = df['tweet'].apply(lambda x: abuse_model(preproc(x)))
+
 # ----------------------------------
 
 # new 2/19
@@ -418,3 +423,4 @@ def update_graph(my_dropdown):
                                                     color='#FFFFFF')))
 
     return (scatterplot)
+
