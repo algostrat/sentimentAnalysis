@@ -1,4 +1,5 @@
 from ensurepip import bootstrap
+#import components as components
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -12,10 +13,7 @@ from dash.dependencies import Output, Input
 import dash_bootstrap_components as dbc
 #from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-#import dash_table
-
-from notebook_abuse_model.preproc import preproc
-import notebook_abuse_model.abuse_model as abuse_model
+import dash_table
 
 # import wordcloud
 # from autocorrect import Speller
@@ -107,6 +105,7 @@ fig7 = px.scatter()
 # my_df1 = my_df1[0:10]
 # print(my_df1)
 
+
 # Change fig marker color
 
 fig1.update_traces(marker=dict(size=9,
@@ -179,20 +178,19 @@ tab_selected_style = {
     'fontWeight': 'bold'
 }
 
-# ------------------------------ Abuse part stuff
-#bad_tweets = []
-#tweet_id = []
-#for i in range(len(df)):
-#    if df['compound'][i] < -0.3 or df['polarity'][i] < -0.6:
-#        bad_tweets.append(df['tweet'][i][0:30])
-#        tweet_id.append(df['tweet_id'][i])
+# ------------------------------ Preliminary abuse stuu
+bad_tweets = []
+tweet_id = []
+for i in range(len(df)):
+    if df['compound'][i] < -0.3 or df['polarity'][i] < -0.6:
+        bad_tweets.append(df['tweet'][i][0:30])
+        tweet_id.append(df['tweet_id'][i])
 
-#my_df = pd.DataFrame(dict(col1=bad_tweets, col2=tweet_id))
-#my_df = clean_tweets[0:10]
-#print(my_df['words'][0])
-
-df['abuse_predictiction'] = df['tweet'].apply(lambda x: abuse_model(preproc(x)))
-
+# -----------
+my_df = pd.DataFrame(dict(col1=bad_tweets, col2=tweet_id))
+my_df = clean_tweets[0:10]
+print(my_df['words'][0])
+# print(my_df)
 # ----------------------------------
 
 # new 2/19
@@ -310,15 +308,13 @@ app.layout = dbc.Container([
             dcc.Graph(id='Graph6', figure=fig6)
         ], width={'size': 6}),
 
-    ], justify='center'),
+    ], justify='center',className='text-center mb-5'),
 
     dbc.Row([
         dbc.Col([
 
             html.H2("Most Common Words v2",
-                    className='text-center mb-2'),
-
-            # add callback function here
+                    className='text-center mb-5'),
 
             dcc.Dropdown(id='my_dropdown', multi=False,
                          options=[
@@ -364,8 +360,35 @@ app.layout = dbc.Container([
     ], justify='center'),
 
     dbc.Row([
-
+        dbc.Col([
+            html.H2("Abuse List",
+                    className='text-center mb-4')
+        ])
     ]),
+
+    dbc.Row([
+        dash_table.DataTable(
+            id='table',
+            columns=[{"name": i, "id": i}
+                     for i in df.columns],
+            data=df.to_dict('records'),
+            style_cell=dict(textAlign='left'),
+            style_header=dict(backgroundColor="Blue"),
+            row_deletable=True,
+            style_data=dict(backgroundColor="Black")
+        )
+
+    ], style={
+        'padding': '20px',
+        'width': '87%',
+        'overflow-y': 'scroll',
+        'height': '600px',
+        'display': 'block',
+        'textAlign': 'center',
+        "margin-left": "auto",
+        "margin-right": "auto"
+        #persistance type for memory?
+    }),
 
 ], fluid=True)
 
@@ -424,3 +447,6 @@ def update_graph(my_dropdown):
 
     return (scatterplot)
 
+
+if __name__ == '__main__':
+    app.run_server(debug=True)

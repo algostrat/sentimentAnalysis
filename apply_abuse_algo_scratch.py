@@ -48,7 +48,7 @@ for i in range(len(df)):
     # print(opinion.noun_phrases)
 
 
-df['abuse_prediction'] = df['tweet'].apply(lambda x: predict(preproc(x), threshold=0.4))
+df['abuse_prediction'] = df['tweet'].apply(lambda x: predict(x, threshold=0.3))
 
 #sample_df = df.loc[df['abuse_prediction'] == True]
 df.to_csv('sent_scores1.csv')

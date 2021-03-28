@@ -2,8 +2,6 @@ import pickle
 from notebook_abuse_model.preproc import preproc
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pandas as pd
-import os
-wd = os.getcwd()
 
 # load the logistic regression model
 # the below will cause as error is this file's curwd is notebook_abuse_model
@@ -17,8 +15,6 @@ except FileNotFoundError:
         log_reg = pickle.load(f)
     # load feature dataframe
     df2 = pd.read_pickle('data/tfidf_feature_matrix.pkl')
-
-
 
 
 def predict(s, threshold=0.5):
