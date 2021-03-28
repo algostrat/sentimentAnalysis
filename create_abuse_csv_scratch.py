@@ -1,3 +1,8 @@
+"""
+This file is a demo to show every predicted abusive instance in the dataframe as
+well as create the abuse_df.csv file that way you can view them in excel or notepad
+"""
+
 import pandas as pd
 
 df = pd.read_csv('sent_scores1.csv')

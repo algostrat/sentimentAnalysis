@@ -1,9 +1,7 @@
 """
 This code is just for predicting new instances and preproc is to
 be passed as an arguement to the tdif vectorizer for new test instances.
-
 """
-
 import unidecode
 import re
 import pkg_resources

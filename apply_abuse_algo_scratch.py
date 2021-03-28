@@ -1,10 +1,13 @@
+"""
+line #54 is the part that applys abuse algo to every instance in dataframe
+df['abuse_prediction'] = df['tweet'].apply(lambda x: predict(x, threshold=0.3))
+All the preceeding code is just to recreate the df as it is in the main dash demo file
+"""
 import pandas as pd
 import re
-from notebook_abuse_model.preproc import preproc
 from notebook_abuse_model.abuse_model import *
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from textblob import TextBlob
-import os
 
 df = pd.read_csv("sent_scores.csv")
 
