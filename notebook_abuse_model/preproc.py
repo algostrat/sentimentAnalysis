@@ -1,6 +1,8 @@
 """
-This code is just for predicting new instances and preproc is to
+This code is just for preprocessing new instances and preproc() is to
 be passed as an arguement to the tdif vectorizer for new test instances.
+
+You will not have to import this code. Importing abuse_model.py already does that.
 """
 import unidecode
 import re
@@ -34,7 +36,7 @@ def preproc(s):
     """
     s is the string/tweet
     manipulate s and return it
-    Tfidfvectorizer's preprocessor should .apply this function to every tweet/string
+    Tfidfvectorizer's preprocessor should ".apply" this function to every tweet/string
     """
 
     # removing numbers this isn't working (this will leave extra spaces if digit is enclosed by two spaces)

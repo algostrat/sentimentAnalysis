@@ -2,7 +2,7 @@
 abuse model is where we take an unprocessed tweet and preprocess it and transform it into
 a TFIDF matrix so that it can be inputted into the logistic regression model that we trained
 in jupyter notebooks.
-THis function is defined in predict() and is to be imported to wherever it is needed.
+This function is defined in predict() below and is to be imported to wherever it is needed.
 """
 import pickle
 from notebook_abuse_model.preproc import preproc

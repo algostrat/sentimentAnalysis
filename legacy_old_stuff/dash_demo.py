@@ -15,7 +15,7 @@ import collections
 
 app = dash.Dash(__name__)
 
-df = pd.read_csv("sent_scores.csv")
+df = pd.read_csv("../sent_scores.csv")
 
 analyzer = SentimentIntensityAnalyzer()
 
