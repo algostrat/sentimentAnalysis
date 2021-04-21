@@ -5,6 +5,7 @@ This file preprocesses the data and creates dataframe for sentiment scores and t
 
 """
 import pandas as pd
+import numpy as np
 import unidecode
 import re
 import pkg_resources
@@ -13,6 +14,7 @@ from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from itertools import chain
 from textblob import TextBlob
 import pickle
+import collections
 
 sym_spell = SymSpell(max_dictionary_edit_distance=3, prefix_length=7)
 
@@ -100,32 +102,48 @@ def preproc(s):
 
 sentdf['clean_tweet'] = sentdf['tweet'].apply(lambda x: preproc(x))
 sentdf['nouns'] = ''
-sentdf['polarity'] = 0
-sentdf['subjectivity'] = 0
-sentdf['compound'] = 0
+sentdf['polarity'] = np.nan
+sentdf['subjectivity'] = np.nan
+sentdf['compound'] = np.nan
+
 noun_phrases = []
 
 for i in range(len(sentdf)):
     # too sensitive
     tweet = sentdf['clean_tweet'][i]
-    # print(tweet)
 
     vader_opinion = sentiment_analyzer_scores(tweet)
 
     opinion = TextBlob(tweet)
 
+    #print(opinion)
+
     sentdf.at[i, 'polarity'] = opinion.sentiment.polarity
     sentdf.at[i, 'subjectivity'] = opinion.sentiment.subjectivity
     # print(vader_opinion['compound'])
     sentdf.at[i, 'compound'] = vader_opinion['compound']
-    sentdf.at[i, 'nouns'] = opinion.noun_phrases
+    sentdf.at[i, 'nouns'] = str(opinion.noun_phrases)
+    #print(opinion.sentiment.subjectivity)
+    #print(sentdf.at[i, 'subjectivity'])
 
     # print(opinion.noun_phrases)
     for noun in opinion.noun_phrases:
         noun_phrases.append(noun.lower().split(' '))
     # print(opinion.noun_phrases)
 
+
+
 noun_phrases = list(chain.from_iterable(noun_phrases))
+#noun_phrases = [s = [s for s in x if len(s) == 2]]
+
+noun_phrases = [s for s in noun_phrases if len(s) > 1]
+
 sentdf.to_pickle('sentdf.pkl')
+
+# word frequencies
+counts = collections.Counter(noun_phrases)
+trend_words = pd.DataFrame(counts.most_common(30),
+                            columns=['words', 'count'])
+
 with open('trends.pkl', 'wb') as f:
-    pickle.dump(noun_phrases, f)
+    pickle.dump(trend_words, f)

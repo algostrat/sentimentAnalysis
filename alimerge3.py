@@ -20,6 +20,7 @@ colors = {
     'background2': '#000000',
 }
 
+"""
 df = pd.read_csv("sent_scores.csv")
 
 analyzer = SentimentIntensityAnalyzer()
@@ -31,7 +32,6 @@ def sentiment_analyzer_scores(text):
 noun_phrases = []
 
 df['nouns'] = df['nouns'].astype(object)
-
 for i in range(len(df)):
     # sentiment_analyzer_scores(df['tweet'][i])
     tweet = df['tweet'][i]
@@ -60,14 +60,18 @@ for i in range(len(df)):
     for noun in opinion.noun_phrases:
         noun_phrases.append(noun.lower())
     # print(opinion.noun_phrases)
-
 # word frequencies
 counts = collections.Counter(noun_phrases)
 trend_words = pd.DataFrame(counts.most_common(30),
                             columns=['words', 'count'])
+"""
+
+df = pd.read_pickle('sentdf.pkl')
+trend_words = pd.read_pickle('trends.pkl')
+abuse_df = pd.read_csv('abuse_df.csv')
 
 #----------------------------------
-fig1 = px.scatter(df, x="compound", y="subjectivity", hover_data=["tweet", "tweet_id"])
+fig1 = px.scatter(df, x='compound', y='subjectivity', hover_data=["tweet", "tweet_id"])
 fig2 = px.scatter(df, x="polarity", y="subjectivity", hover_data=["tweet", "tweet_id"])
 fig3 = px.bar(trend_words[0:20], x='words', y='count')
 fig4 = go.Figure()
@@ -325,8 +329,8 @@ app.layout = dbc.Container([
         dash_table.DataTable(
             id='table',
             columns=[{"name": i, "id": i}
-                     for i in df.columns],
-            data=df.to_dict('records'),
+                     for i in abuse_df.columns],
+            data=abuse_df.to_dict('records'),
             style_cell=dict(textAlign='left'),
             style_header=dict(backgroundColor="Blue"),
             row_deletable=True,
@@ -380,9 +384,15 @@ def render_content(tab):
 )
 
 def update_graph(my_dropdown):
-#    if my_dropdown == '_abusive_list_':
-#        dff = abuse_df
-    dff = df[df["tweet"].str.contains(my_dropdown)]
+    print(type(my_dropdown))
+
+    if my_dropdown is None:
+        my_dropdown = ''
+
+    if my_dropdown == '_abusive_list_':
+        dff = abuse_df
+    else:
+        dff = df[df["tweet"].str.contains(my_dropdown)]
 
     scatterplot = px.scatter(
         data_frame=dff,
