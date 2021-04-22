@@ -1,5 +1,3 @@
-from ensurepip import bootstrap
-#import components as components
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -11,13 +9,8 @@ import re
 import collections
 from dash.dependencies import Output, Input
 import dash_bootstrap_components as dbc
-#from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import dash_table
-
-# import wordcloud
-# from autocorrect import Speller
-# from vader_demo import fig
 
 app = dash.Dash(__name__)
 
@@ -27,10 +20,10 @@ colors = {
     'background2': '#000000',
 }
 
+"""
 df = pd.read_csv("sent_scores.csv")
 
 analyzer = SentimentIntensityAnalyzer()
-
 
 def sentiment_analyzer_scores(text):
     return analyzer.polarity_scores(text)
@@ -39,7 +32,6 @@ def sentiment_analyzer_scores(text):
 noun_phrases = []
 
 df['nouns'] = df['nouns'].astype(object)
-
 for i in range(len(df)):
     # sentiment_analyzer_scores(df['tweet'][i])
     tweet = df['tweet'][i]
@@ -68,45 +60,24 @@ for i in range(len(df)):
     for noun in opinion.noun_phrases:
         noun_phrases.append(noun.lower())
     # print(opinion.noun_phrases)
-
 # word frequencies
 counts = collections.Counter(noun_phrases)
-clean_tweets = pd.DataFrame(counts.most_common(30),
+trend_words = pd.DataFrame(counts.most_common(30),
                             columns=['words', 'count'])
+"""
 
-# pie chart info (only top 10)
-countspie = collections.Counter(noun_phrases)
-clean_tweetspie = pd.DataFrame(counts.most_common(10),
-                               columns=['wordsnew', 'countnew'])
+df = pd.read_pickle('sentdf.pkl')
+trend_words = pd.read_pickle('trends.pkl')
+abuse_df = pd.read_csv('abuse_df.csv')
 
-#delete
-for index, row in clean_tweetspie.iterrows():
-    words = row['wordsnew'].split()
-    if len(words) > 2:
-        clean_tweetspie.drop(index, inplace=True)
-
-# print(clean_tweets)
-
-#delete
-for index, row in clean_tweets.iterrows():
-    words = row['words'].split()
-    if len(words) > 2:
-        clean_tweets.drop(index, inplace=True)
-
-# print(clean_tweets)
-
-fig1 = px.scatter(df, x="compound", y="subjectivity", hover_data=["tweet", "tweet_id"])
+#----------------------------------
+fig1 = px.scatter(df, x='polarity', y='subjectivity', hover_data=["tweet", "tweet_id"])
 fig2 = px.scatter(df, x="polarity", y="subjectivity", hover_data=["tweet", "tweet_id"])
-fig3 = px.bar(clean_tweets, x='words', y='count')
+fig3 = px.bar(trend_words[0:20], x='words', y='count')
 fig4 = go.Figure()
-fig5 = px.pie(clean_tweetspie, names='wordsnew', values='countnew')
-fig6 = px.bar(clean_tweetspie, x='wordsnew', y='countnew')
+fig5 = px.pie(trend_words[0:10], names='words', values='count')
+fig6 = px.bar(trend_words[0:10], x='words', y='count')
 fig7 = px.scatter()
-
-# my_df1 = pd.DataFrame(dict(col1=clean_tweets))
-# my_df1 = my_df1[0:10]
-# print(my_df1)
-
 
 # Change fig marker color
 
@@ -180,18 +151,6 @@ tab_selected_style = {
     'fontWeight': 'bold'
 }
 
-# ------------------------------ Preliminary abuse stuu
-bad_tweets = []
-tweet_id = []
-
-# -----------
-my_df = pd.DataFrame(dict(col1=bad_tweets, col2=tweet_id))
-my_df = clean_tweets[0:10]
-print(my_df['words'][0])
-# print(my_df)
-# ----------------------------------
-
-# new 2/19
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SUPERHERO],
                 # mobile
@@ -215,9 +174,7 @@ app.layout = dbc.Container([
                        "margin-right": "auto"
                        },
             )
-
         ])
-
     ]),
 
     dbc.Row([
@@ -245,31 +202,33 @@ app.layout = dbc.Container([
     ]),
 
     dbc.Row([
-        dbc.Col([
-
-            html.H6("Plotting Vader's compound vs Textblob's subjectivity. "
-                    "compound: {negative <= 0.05, neutral >= 0.05 "
-                    "and <= 0.05, positive > 0.05}.",
-                    className='text-center mb-2'),
-        ], width={'size': 6}),
+        # old graph info
+        # dbc.Col([
+        # html.H6("Plotting Vader's compound vs Textblob's subjectivity. "
+        #       "compound: {negative <= 0.05, neutral >= 0.05 "
+        #      "and <= 0.05, positive > 0.05}.",
+        #     className='text-center mb-2'),
+        # ], width={'size': 6}),
 
         dbc.Col([
 
             html.H6("Plotting Textblob subjectivity vs. polarity.",
                     className='text-center mb-2'),
-        ], width={'size': 6}),
+        ], width={'size': 12}),
 
     ], justify='center'),
-    dbc.Row([
-        dbc.Col([
 
-            dcc.Graph(id='Graph1', figure=fig1)
-        ], width={'size': 6}),
+    dbc.Row([
+        # old graph
+        # dbc.Col([
+
+        #   dcc.Graph(id='Graph1', figure=fig1)
+        # ], width={'size': 6}),
 
         dbc.Col([
 
             dcc.Graph(id='Graph2', figure=fig2)
-        ], width={'size': 6}),
+        ], width={'size': 12}),
 
     ], justify='center'),
 
@@ -306,7 +265,7 @@ app.layout = dbc.Container([
             dcc.Graph(id='Graph6', figure=fig6)
         ], width={'size': 6}),
 
-    ], justify='center',className='text-center mb-5'),
+    ], justify='center', className='text-center mb-5'),
 
     dbc.Row([
         dbc.Col([
@@ -316,16 +275,17 @@ app.layout = dbc.Container([
 
             dcc.Dropdown(id='my_dropdown', multi=False,
                          options=[
-                             {'label': my_df['words'][0], 'value': my_df['words'][0]},
-                             {'label': my_df['words'][1], 'value': my_df['words'][1]},
-                             {'label': my_df['words'][2], 'value': my_df['words'][2]},
-                             {'label': my_df['words'][3], 'value': my_df['words'][3]},
-                             {'label': my_df['words'][4], 'value': my_df['words'][4]},
-                             {'label': my_df['words'][5], 'value': my_df['words'][5]},
-                             # {'label': my_df['words'][6], 'value': my_df['words'][6]},
-                             {'label': my_df['words'][7], 'value': my_df['words'][7]},
-                             {'label': my_df['words'][8], 'value': my_df['words'][8]},
-                             {'label': my_df['words'][9], 'value': my_df['words'][9]}
+                             {'label': trend_words['words'][0], 'value': trend_words['words'][0]},
+                             {'label': trend_words['words'][1], 'value': trend_words['words'][1]},
+                             {'label': trend_words['words'][2], 'value': trend_words['words'][2]},
+                             {'label': trend_words['words'][3], 'value': trend_words['words'][3]},
+                             {'label': trend_words['words'][4], 'value': trend_words['words'][4]},
+                             {'label': trend_words['words'][5], 'value': trend_words['words'][5]},
+                             {'label': trend_words['words'][6], 'value': trend_words['words'][6]},
+                             {'label': trend_words['words'][7], 'value': trend_words['words'][7]},
+                             {'label': trend_words['words'][8], 'value': trend_words['words'][8]},
+                             {'label': trend_words['words'][9], 'value': trend_words['words'][9]},
+                             {'label': '[View abusive tweets scores]', 'value': '_abusive_list_'}
                          ],
                          optionHeight=45,
                          disabled=False,
@@ -340,12 +300,13 @@ app.layout = dbc.Container([
 
         ])
     ]),
+
     # Abuse fig
     dbc.Row([
         dbc.Col([
-
-            html.H2("Abuse figure",
-                    className='text-center mb-2'),
+            #deleted for now, we can add an abuse scatter plot later if needed
+            #html.H2("Abuse figure",
+          #          className='text-center mb-2'),
 
         ])
     ]),
@@ -353,7 +314,7 @@ app.layout = dbc.Container([
     dbc.Row([
         dbc.Col([
 
-            dcc.Graph(id='Graph7', figure=fig7)
+          #  dcc.Graph(id='Graph7', figure=fig7)
         ]),
     ], justify='center'),
 
@@ -368,8 +329,8 @@ app.layout = dbc.Container([
         dash_table.DataTable(
             id='table',
             columns=[{"name": i, "id": i}
-                     for i in df.columns],
-            data=df.to_dict('records'),
+                     for i in abuse_df.columns],
+            data=abuse_df.to_dict('records'),
             style_cell=dict(textAlign='left'),
             style_header=dict(backgroundColor="Blue"),
             row_deletable=True,
@@ -385,7 +346,7 @@ app.layout = dbc.Container([
         'textAlign': 'center',
         "margin-left": "auto",
         "margin-right": "auto"
-        #persistance type for memory?
+        # persistance type for memory?
     }),
 
 ], fluid=True)
@@ -420,14 +381,22 @@ def render_content(tab):
 @app.callback(
     Output(component_id='Graph4', component_property='figure'),
     Input(component_id='my_dropdown', component_property='value')
-
 )
+
 def update_graph(my_dropdown):
-    dff = df[df['tweet'].str.contains(my_dropdown)]
+    print(type(my_dropdown))
+
+    if my_dropdown is None:
+        my_dropdown = ''
+
+    if my_dropdown == '_abusive_list_':
+        dff = abuse_df
+    else:
+        dff = df[df["tweet"].str.contains(my_dropdown)]
 
     scatterplot = px.scatter(
         data_frame=dff,
-        x="compound", y="subjectivity", hover_data=["tweet", "tweet_id"],
+        x="polarity", y="subjectivity", hover_data=["tweet", "tweet_id"],
     )
 
     scatterplot.update_xaxes(range=[-1.1, 1.1])
