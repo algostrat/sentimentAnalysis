@@ -145,5 +145,5 @@ counts = collections.Counter(noun_phrases)
 trend_words = pd.DataFrame(counts.most_common(30),
                             columns=['words', 'count'])
 
-with open('trends.pkl', 'wb') as f:
+with open('data/trends.pkl', 'wb') as f:
     pickle.dump(trend_words, f)
