@@ -167,7 +167,7 @@ app.layout = dbc.Container([
             dbc.Card(
                 [
                     dbc.CardImg(
-                        src="assets/fau logo 2.png",
+                        src="assets/logo.png",
                         bottom=True, className="center"),
                 ],
                 style={"width": "8rem",
@@ -418,4 +418,4 @@ def update_graph(my_dropdown):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server()

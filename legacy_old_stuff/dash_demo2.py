@@ -205,7 +205,7 @@ app.layout = dbc.Container([
             dbc.Card(
                 [
                     dbc.CardImg(
-                        src="assets/fau logo 2.png",
+                        src="../assets/fau logo 2.png",
                         bottom=True, className="center"),
                 ],
                 style={"width": "8rem",
