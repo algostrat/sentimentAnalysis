@@ -3,3 +3,4 @@ legacy_old_stuff/egn.csv
 notebook_abuse_model/data
 notebook_abuse_model/.ipynb_checkpoints
 .ipynb_checkpoints
+.idea
