@@ -8,9 +8,11 @@ Sentiment Analysis can help rewardStyle better understand public reaction to a s
 The goal for this project is to acquire specific data from Twitter and research the feasibility for scraping Twitter data. The specific data will be in accordance with what Kurt Radwanski (rewardStyle engineer) suggested, which is posts involving holiday themed hashtags. The data will be used to analyze posts for sentiment scores that will then be plotted. As of this proposal, a lite version of a crawler for downloading twitter data has been established but a plan to automate this server to download data on a timely basis will be completed. We will demonstrate the front-end application and preliminary discoveries and possible algorithms as to how to analyze trends and further classify social media blog posts to an end user.
 
 # Overall System Design with Block Diagrams
+
 Below is a visual representation of the system in the form of a block diagram. It is important to note how each component is interacting with each other. (See 2.4 for high level explanation and section 3 for implementation)
 
 # Sub-System Design and High-Level Implementation:
+
 Crawler This subsystem will retrieve Instagram post metadata (such as the caption and hashtags) and store it in our centralized storage server. The information stored will provide the sentiment analysis subsystem with data to analyze, and the frontend web dashboard with post data to show.
 The components for this subsystem are written in the PHP programming language and a specific API(Twitter). These two components are responsible for retrieving the necessary data for sentiment analysis. 
 The crawler will collect twitter data and store it in a SQL server that format that will be necessary for sentiment analysis. It will also interact with the storage subsystem since it will be sending all the data acquired from the twitter API. 
