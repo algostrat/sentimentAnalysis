@@ -7,9 +7,13 @@ Sentiment Analysis can help rewardStyle better understand public reaction to a s
 
 The goal for this project is to acquire specific data from Twitter and research the feasibility for scraping Twitter data. The specific data will be in accordance with what Kurt Radwanski (rewardStyle engineer) suggested, which is posts involving holiday themed hashtags. The data will be used to analyze posts for sentiment scores that will then be plotted. As of this proposal, a lite version of a crawler for downloading twitter data has been established but a plan to automate this server to download data on a timely basis will be completed. We will demonstrate the front-end application and preliminary discoveries and possible algorithms as to how to analyze trends and further classify social media blog posts to an end user.
 
-### Git Repo file structure
-
-
+### Repository's file structure
+The application is located in app.py and can be run with the command ```python app.py```. 
+Assets contains static images for the dashbopard's front end website.
+Data contains some of the sample data we used to run the analysis and abuse algorithm on and it is what get's
+shown on the front end.
+Notebook abuse model folder contains the jupyter notebooks written to clean data. train and test different abuse models. Also this folder contains the trained final logistic regression model in a pickle file.
+Utils contains separate scripts used for other data cleaning and preprocessing. 
 
 ## Overall System Design with Block Diagrams
 Below is a visual representation of the system in the form of a block diagram. It is important to note how each component is interacting with each other. (See 2.4 for high level explanation and section 3 for implementation)
@@ -44,5 +48,7 @@ The crawler features a modular design; each module of the crawler was independen
 
 ![usecasediagram](https://user-images.githubusercontent.com/8900863/137652517-fcf117b4-0d30-4cd9-8eac-3d09a399024f.JPG)
 
+![dashboard1](https://user-images.githubusercontent.com/8900863/137652961-941aecc0-de2f-4a15-bd34-dca16e4058db.JPG)
 
+![dashboard2](https://user-images.githubusercontent.com/8900863/137652969-e7eeea61-2f2f-4e63-9e2c-11648654c0c2.JPG)
 
