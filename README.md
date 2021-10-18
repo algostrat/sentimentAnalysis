@@ -7,11 +7,11 @@ Sentiment Analysis can help rewardStyle better understand public reaction to a s
 
 The goal for this project is to acquire specific data from Twitter and research the feasibility for scraping Twitter data. The specific data will be in accordance with what Kurt Radwanski (rewardStyle engineer) suggested, which is posts involving holiday themed hashtags. The data will be used to analyze posts for sentiment scores that will then be plotted. As of this proposal, a lite version of a crawler for downloading twitter data has been established but a plan to automate this server to download data on a timely basis will be completed. We will demonstrate the front-end application and preliminary discoveries and possible algorithms as to how to analyze trends and further classify social media blog posts to an end user.
 
-# Overall System Design with Block Diagrams
+## Overall System Design with Block Diagrams
 
 Below is a visual representation of the system in the form of a block diagram. It is important to note how each component is interacting with each other. (See 2.4 for high level explanation and section 3 for implementation)
 
-# Sub-System Design and High-Level Implementation:
+## Sub-System Design and High-Level Implementation:
 
 Crawler This subsystem will retrieve Instagram post metadata (such as the caption and hashtags) and store it in our centralized storage server. The information stored will provide the sentiment analysis subsystem with data to analyze, and the frontend web dashboard with post data to show.
 The components for this subsystem are written in the PHP programming language and a specific API(Twitter). These two components are responsible for retrieving the necessary data for sentiment analysis. 
@@ -36,4 +36,12 @@ Web Application This subsystem will acquire data curated by the sentiment analys
 The components for this subsystem include using programming languages like Python and HTML, CSS, and JavaScript. We will also be using other components like Plotly to present our data. Plotly will use Flask, which is a micro web framework that will serve data to each front-end component. Plotly will organize our website and be able to display a dashboard structure. Both HTML and CSS will be used to create and organize the website to view our data. 
 The web application will collect all instances from the database and display results in a user-friendly format. This will be done by the Python programming language.  
 Some challenges we might face include being able to acquire and display the proper data from the database, avoiding program crashing bugs that would require debugging, the final application not being user friendly and confusing to potentially navigate, etc.
+
+![blockdiagram](https://user-images.githubusercontent.com/8900863/137652503-a7fbd46e-3b09-45f2-be86-034e04251fa9.JPG)
+
+![statediagram](https://user-images.githubusercontent.com/8900863/137652511-4a28e19e-5642-448a-a961-aabb0758d0ec.JPG)
+
+![usecasediagram](https://user-images.githubusercontent.com/8900863/137652517-fcf117b4-0d30-4cd9-8eac-3d09a399024f.JPG)
+
+
 
