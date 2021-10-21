@@ -1,0 +1,28 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+dash-table = "==4.11.1"
+autocorrect = "==2.2.2"
+dash = "==1.18.1"
+pandas-profiling = "==2.10.1"
+plotly = "==4.9.0"
+matplotlib = "==3.3.4"
+seaborn = "==0.11.1"
+pandas = "==1.2.1"
+wordcloud = "==1.8.1"
+textblob = "==0.15.3"
+dash-html-components = "==1.1.1"
+dash-core-components = "==1.14.1"
+nltk = "==3.5"
+numpy = "==1.19.5"
+dash-bootstrap-components = "==0.11.3"
+Unidecode = "==1.2.0"
+vaderSentiment = "==3.3.2"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
