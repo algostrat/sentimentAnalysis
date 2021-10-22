@@ -5,3 +5,9 @@ notebook_abuse_model/.ipynb_checkpoints
 .ipynb_checkpoints
 .idea/
 app_credentials.py
+app_self_host.py
+hello.py
+venv
+*.pyc
+.DS_Store
+.env

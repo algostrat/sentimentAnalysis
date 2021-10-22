@@ -66,11 +66,9 @@ trend_words = pd.DataFrame(counts.most_common(30),
                             columns=['words', 'count'])
 """
 
-df = pd.read_pickle('data/sentdf.pkl')
-trend_words = pd.read_pickle('data/trends.pkl')
+df = pd.read_csv('data/sentdf.csv')
+trend_words = pd.read_csv('data/trends.csv')
 abuse_df = pd.read_csv('data/abuse_df.csv')
-abuse_df = abuse_df.loc[:, ~abuse_df.columns.str.contains('^Unnamed')]
-
 
 #----------------------------------
 fig1 = px.scatter(df, x='polarity', y='subjectivity', hover_data=["tweet", "tweet_id"])

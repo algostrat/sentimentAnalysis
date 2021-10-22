@@ -22,6 +22,7 @@ dash-bootstrap-components = "==0.11.3"
 Unidecode = "==1.2.0"
 vaderSentiment = "==3.3.2"
 boto3 = "*"
+gunicorn = "*"
 
 [dev-packages]
 
