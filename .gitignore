@@ -4,3 +4,4 @@ notebook_abuse_model/data
 notebook_abuse_model/.ipynb_checkpoints
 .ipynb_checkpoints
 .idea/
+app_credentials.py
