@@ -12,4 +12,4 @@ venv
 .DS_Store
 .env
 .vscode/
-procfile
+legacy_old_stuff/
